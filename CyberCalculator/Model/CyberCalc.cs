@@ -127,6 +127,11 @@ namespace CyberCalculator.Model
             // TODO
             return "";
         }
+        private string FromBase64(string s)
+        {
+            // TODO
+            return "";
+        }
 
         private string ToSha1(string s)
         {
