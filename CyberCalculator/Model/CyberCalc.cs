@@ -62,8 +62,10 @@ namespace CyberCalculator.Model
                             output = ToSha256(input);
                             break;
                         case "ToBase64":
+                            output = ToBase64(input);
                             break;
                         case "FromBase64":
+                            output = FromBase64(input);
                             break;
                         default:
                             break;
@@ -81,76 +83,49 @@ namespace CyberCalculator.Model
 
         private string ToHex(string s)
         {
-            byte[] ba = Encoding.ASCII.GetBytes(s);
-            // BitConvertor.ToString function 
-            // converts the numeric value of each element of a specified array of bytes to its equivalent hexadecimal string representation.
-            return BitConverter.ToString(ba).Replace("-", " ");
+            return ToBaseX(16, s, 2);
         }
 
         private string FromHex(string s)
         {
-            byte[] bytes = s.Split(' ').Select(b => Convert.ToByte(b, 16)).ToArray();
-            return Encoding.ASCII.GetString(bytes);
+            return FromBaseX(16, s);
         }
 
         private string ToBinary(string s)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(s);
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in bytes)
-            {   
-                sb.Append(Convert.ToString(b, 2).PadLeft(8, '0') + " ");
-            };
-            sb.Length--; // remove the last cahr ' ' ;
-            return sb.ToString();
+            return ToBaseX(2, s, 8);
         }
 
         private string FromBinary(string s)
         {
-            
-            string[] binaryBytes = s.Split(' ');
-            return new string(binaryBytes.Select(b => (char)Convert.ToByte(b, 2)).ToArray());
+
+            return FromBaseX(2, s);
 
         }
         private string ToOctal(string s)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(s);
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in bytes)
-            {
-                sb.Append(Convert.ToString(b, 8) + " ");
-            }
-            sb.Length--;
-            return sb.ToString();
+            return ToBaseX(8, s, 3);
         }
 
         private string FromOctal(string s)
         {
-            string[] binaryBytes = s.Split(' ');
-            return new string(binaryBytes.Select(b => (char)Convert.ToByte(b, 8)).ToArray());
+            return FromBaseX(8, s);
 
         }
 
         private string ToDecimal(string s)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in s)
-            {
-                stringBuilder.Append((int)c + " ");
-            }
-            return stringBuilder.ToString();
+            return ToBaseX(10, s, 3);
         }
         private string FromDecimal(string s)
         {
-            string[] bytes = s.Split(' ');
+            return FromBaseX(10, s);
+        }
 
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (string b in bytes)
-            {
-                if (b != "")
-                    stringBuilder.Append((char)Int32.Parse(b));
-            }
-            return stringBuilder.ToString();
+        private string ToBase64(string s)
+        {
+            // TODO
+            return "";
         }
 
         private string ToSha1(string s)
@@ -165,6 +140,24 @@ namespace CyberCalculator.Model
             SHA256 sha256 = SHA256.Create();
             byte[] hashBytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(s));
             return BitConverter.ToString(hashBytes).Replace("-", " ");
+        }
+
+        private string FromBaseX(int baseX, string s)
+        {
+            string[] binaryBytes = s.Split(' ');
+            return new string(binaryBytes.Select(b => (char)Convert.ToByte(b, baseX)).ToArray());
+        }
+
+        private string ToBaseX(int baseX, string s, int padLef)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(s);
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in bytes)
+            {
+                sb.Append(Convert.ToString(b, baseX).PadLeft(padLef, '0') + " ");
+            }
+            sb.Length--;
+            return sb.ToString();
         }
 
 
