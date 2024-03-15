@@ -15,6 +15,7 @@ namespace CyberCalculator.Model
             "FromDecimal", "ToDecimal",
             "FromBase64", "ToBase64",
             "Sha1", "Sha256",
+            "Md5"
         };
 
         public string Compute(string input, string recipe)
@@ -66,6 +67,9 @@ namespace CyberCalculator.Model
                             break;
                         case "FromBase64":
                             output = FromBase64(input);
+                            break;
+                        case "Md5":
+                            output = ToMd5(input);
                             break;
                         default:
                             break;
@@ -124,13 +128,12 @@ namespace CyberCalculator.Model
 
         private string ToBase64(string s)
         {
-            // TODO
-            return "";
+            return Convert.ToBase64String(Encoding.ASCII.GetBytes(s));
         }
         private string FromBase64(string s)
         {
-            // TODO
-            return "";
+            byte[] bytes = Convert.FromBase64String(s);
+            return Encoding.ASCII.GetString(bytes);
         }
 
         private string ToSha1(string s)
@@ -147,10 +150,26 @@ namespace CyberCalculator.Model
             return BitConverter.ToString(hashBytes).Replace("-", " ");
         }
 
+        private string ToMd5(string s)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(s));
+            return BitConverter.ToString(hashBytes).Replace('-', ' ');
+        }
+
+        private string ToMd2(string s)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(s));
+            return BitConverter.ToString(hashBytes).Replace('-', ' ');
+        }
+
+
         private string FromBaseX(int baseX, string s)
         {
             string[] binaryBytes = s.Split(' ');
-            return new string(binaryBytes.Select(b => (char)Convert.ToByte(b, baseX)).ToArray());
+            byte[] bytes = binaryBytes.Select(b=> Convert.ToByte(b, baseX)).ToArray();
+            return Encoding.ASCII.GetString(bytes);
         }
 
         private string ToBaseX(int baseX, string s, int padLef)
