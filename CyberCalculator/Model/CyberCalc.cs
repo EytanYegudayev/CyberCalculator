@@ -7,6 +7,7 @@ namespace CyberCalculator.Model
 {
     public class CyberCalc
     {
+        public readonly Encoding encoding437 = Encoding.GetEncoding(437);
         public static string[] FUNCTION_NAMES_ARRAY =  
          {
             "FromHex", "ToHex", 
@@ -15,10 +16,10 @@ namespace CyberCalculator.Model
             "FromDecimal", "ToDecimal",
             "FromBase64", "ToBase64",
             "Sha1", "Sha256",
-            "Md5"
+            "Md5", "XOR", "AND"
         };
 
-        public string Compute(string input, string recipe)
+        public string Compute(string stringInput, string recipe, byte[] bytesInput)
         {
             string output = "";
             string[] recipeArr = recipe.Split('\n');
@@ -26,56 +27,62 @@ namespace CyberCalculator.Model
             StringBuilder outputBuilder = new StringBuilder();
             try
             {
-
                 foreach (string s in recipeArr)
                 {
 
                     switch (s)
                     {
                         case "ToHex":
-                            output = ToHex(input);
+                            output = ToHex(Encoding.UTF8.GetBytes(stringInput));
                             break;
                         case "FromHex":
-                            output = FromHex(input);
+                            output = FromHex(stringInput);
                             break;
                         case "ToBinary":
-                            output = ToBinary(input);
+                            output = ToBinary(Encoding.UTF8.GetBytes(stringInput));
                             break;
                         case "FromBinary":
-                            output = FromBinary(input);
+                            output = FromBinary(stringInput);
                             break;
                         case "ToOctal":
-                            output = ToOctal(input);
+                            output = ToOctal(Encoding.UTF8.GetBytes(stringInput));
                             break;
                         case "FromOctal":
-                            output = FromOctal(input);
+                            output = FromOctal(stringInput);
                             break;
                         case "ToDecimal":
-                            output = ToDecimal(input);
+                            output = ToDecimal(Encoding.UTF8.GetBytes(stringInput));
                             break;
                         case "FromDecimal":
-                            output = FromDecimal(input);
+                            output = FromDecimal(stringInput);
                             break;
                         case "Sha1":
-                            output = ToSha1(input);
+                            output = ToSha1(bytesInput);
                             break;
                         case "Sha256":
-                            output = ToSha256(input);
+                            output = ToSha256(bytesInput);
                             break;
                         case "ToBase64":
-                            output = ToBase64(input);
+                            output = ToBase64(Encoding.UTF8.GetBytes(stringInput));
                             break;
                         case "FromBase64":
-                            output = FromBase64(input);
+                            output = FromBase64(stringInput);
                             break;
                         case "Md5":
-                            output = ToMd5(input);
+                            output = ToMd5(bytesInput);
+                            break;
+                        case "XOR":
+                            output = XOR(bytesInput);
+                            break;
+                        case "AND":
+                            output = AND(bytesInput);
                             break;
                         default:
                             break;
 
                     }
-                    input = output;
+                    stringInput = output;
+                    bytesInput = encoding437.GetBytes(stringInput);
                 }
             }
             catch 
@@ -85,9 +92,18 @@ namespace CyberCalculator.Model
             return output;
         }
 
-        private string ToHex(string s)
+        private string XOR(byte[] bytesInput)
+        { 
+            return "";
+        }
+
+        private string AND(byte[] bytesInput) 
         {
-            return ToBaseX(16, s, 2);
+            return "";
+        }
+        private string ToHex(byte[] bytes)
+        {
+            return ToBaseX(16, bytes, 2);
         }
 
         private string FromHex(string s)
@@ -95,9 +111,9 @@ namespace CyberCalculator.Model
             return FromBaseX(16, s);
         }
 
-        private string ToBinary(string s)
+        private string ToBinary(byte[] bytes)
         {
-            return ToBaseX(2, s, 8);
+            return ToBaseX(2, bytes, 8);
         }
 
         private string FromBinary(string s)
@@ -106,9 +122,9 @@ namespace CyberCalculator.Model
             return FromBaseX(2, s);
 
         }
-        private string ToOctal(string s)
+        private string ToOctal(byte[] bytes)
         {
-            return ToBaseX(8, s, 3);
+            return ToBaseX(8, bytes, 3);
         }
 
         private string FromOctal(string s)
@@ -117,64 +133,56 @@ namespace CyberCalculator.Model
 
         }
 
-        private string ToDecimal(string s)
+        private string ToDecimal(byte[] bytes)
         {
-            return ToBaseX(10, s, 3);
+            return ToBaseX(10, bytes, 3);
         }
         private string FromDecimal(string s)
         {
             return FromBaseX(10, s);
         }
 
-        private string ToBase64(string s)
+        private string ToBase64(byte[]bytesInput)
         {
-            return Convert.ToBase64String(Encoding.ASCII.GetBytes(s));
+            return Convert.ToBase64String(bytesInput);
         }
         private string FromBase64(string s)
         {
             byte[] bytes = Convert.FromBase64String(s);
-            return Encoding.ASCII.GetString(bytes);
+            return encoding437.GetString(bytes);
         }
 
-        private string ToSha1(string s)
+        private string ToSha1(byte[] bytesInput)
         {
             SHA1 sha1 = SHA1.Create();
-            byte[] hashBytes = sha1.ComputeHash(Encoding.ASCII.GetBytes(s));
+            byte[] hashBytes = sha1.ComputeHash(bytesInput);
             return BitConverter.ToString(hashBytes).Replace("-", " ");
         }
 
-        private string ToSha256(string s)
+        private string ToSha256(byte[] bytesInput)
         {
             SHA256 sha256 = SHA256.Create();
-            byte[] hashBytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(s));
+            byte[] hashBytes = sha256.ComputeHash(bytesInput);
             return BitConverter.ToString(hashBytes).Replace("-", " ");
         }
 
-        private string ToMd5(string s)
+        private string ToMd5(byte[] bytesInput)
         {
             MD5 md5 = MD5.Create();
-            byte[] hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(s));
+            byte[] hashBytes = md5.ComputeHash(bytesInput);
             return BitConverter.ToString(hashBytes).Replace('-', ' ');
         }
 
-        private string ToMd2(string s)
+        private string FromBaseX(int baseX, string stringInput)
         {
-            MD5 md5 = MD5.Create();
-            byte[] hashBytes = md5.ComputeHash(Encoding.ASCII.GetBytes(s));
-            return BitConverter.ToString(hashBytes).Replace('-', ' ');
-        }
-
-
-        private string FromBaseX(int baseX, string s)
-        {
-            string[] binaryBytes = s.Split(' ');
+            string[] binaryBytes = stringInput.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            
             byte[] bytes = binaryBytes.Select(b=> Convert.ToByte(b, baseX)).ToArray();
-            return Encoding.ASCII.GetString(bytes);
+            return encoding437.GetString(bytes);
         }
 
-        private string ToBaseX(int baseX, string s, int padLef)
+        private string ToBaseX(int baseX, byte[] bytes, int padLef)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(s);
             StringBuilder sb = new StringBuilder();
             foreach (byte b in bytes)
             {

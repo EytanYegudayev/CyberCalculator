@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +13,7 @@ namespace CyberCalculator
     public partial class CyberCalculatorForm : Form
     {
         private CyberCalc cyberCalculator = new CyberCalc();
-        
+        private byte[] fileInput;
         private TextBox InputTextBox = new TextBox();
         private TextBox OutputTextBox = new TextBox();
         private TextBox RecipeTextBox = new TextBox();
@@ -41,6 +42,12 @@ namespace CyberCalculator
             InputTextBox.BackColor = Color.White;
             InputTextBox.Font = IOFont;
             InputTextBox.Multiline = true;
+
+            InputTextBox.AllowDrop = true;
+            // Attach event handlers
+            InputTextBox.DragEnter += InputTextBox_DragEnter;
+            InputTextBox.DragDrop += InputTextBox_DragDrop;
+            InputTextBox.KeyUp += InputTextBox_KeyUp;
             Controls.Add(InputTextBox);
             
             OutputTextBox.BackColor = Color.White;
@@ -87,10 +94,71 @@ namespace CyberCalculator
             CalculatorForm_Resize(null, null);
             Resize += CalculatorForm_Resize;
         }
-        private void Sha1Button_Click(object sender, EventArgs e)
-        {
 
+        private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            OutputTextBox.Text = InputTextBox.Text;
+            if (InputTextBox.Text == "")
+            {
+                OutputTextBox.Text = "";
+                fileInput = null;
+                return;
+            }
+            fileInput = cyberCalculator.encoding437.GetBytes(InputTextBox.Text);
+            string oldRecipe = RecipeTextBox.Text;
+            string output = cyberCalculator.Compute(InputTextBox.Text, RecipeTextBox.Text, fileInput);
+            if (output == null)
+            {
+                RecipeTextBox.Text = oldRecipe;
+                MessageBox.Show("Invalid Input");
+                return;
+            }
+            OutputTextBox.Text = output;
         }
+
+
+        private void InputTextBox_DragEnter(object sender, DragEventArgs e)
+        {
+            // Check if the data being dragged is a file
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void InputTextBox_DragOver(object sender, DragEventArgs e)
+        {
+            // Set the effect based on whether files are being dragged
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+
+        private void InputTextBox_DragDrop(object sender, DragEventArgs e)
+        {
+            // Retrieve the array of file names being dragged
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if(files.Length > 0)
+            {
+                fileInput = File.ReadAllBytes(files[0]);
+                // change all the null bytes 0x00 to another byte to print the file.
+                string printBytes = new string(fileInput.Select(b=> ((int)b) > 0 ? (char)b : '.').ToArray());
+                InputTextBox.Text = printBytes;
+            }
+                
+        }
+
         private void CleanRecipeButton_Click(object sender, EventArgs e)
         {
             RecipeTextBox.Text = "";
@@ -123,7 +191,13 @@ namespace CyberCalculator
             Button button = (Button)sender;
             string oldRecipe = RecipeTextBox.Text;
             RecipeTextBox.Text += button.Text + Environment.NewLine;
-            string output = cyberCalculator.Compute(InputTextBox.Text, RecipeTextBox.Text);
+            if (InputTextBox.Text == "")
+                return;
+            if(fileInput == null)
+            {
+                fileInput = cyberCalculator.encoding437.GetBytes(InputTextBox.Text);
+            }
+            string output = cyberCalculator.Compute(InputTextBox.Text, RecipeTextBox.Text, fileInput);
             if(output == null)
             {
                 RecipeTextBox.Text = oldRecipe;
