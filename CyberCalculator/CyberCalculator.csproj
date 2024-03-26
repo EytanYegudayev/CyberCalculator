@@ -52,7 +52,25 @@
     <Compile Include="GUI\CyberCalculatorForm.Designer.cs">
       <DependentUpon>CyberCalculatorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\AndAlogrithm.cs" />
+    <Compile Include="Model\From64BaseAlgorithm.cs" />
+    <Compile Include="Model\FromBaseAlgorithm.cs" />
+    <Compile Include="Model\BaseAlgorithm.cs" />
     <Compile Include="Model\CyberCalc.cs" />
+    <Compile Include="Model\FromBinaryBaseAlgorithm.cs" />
+    <Compile Include="Model\FromHexBaseAlgorithm.cs" />
+    <Compile Include="Model\FromOctalBaseAlgorithm.cs" />
+    <Compile Include="Model\Interfaces\ICryptoFunction.cs" />
+    <Compile Include="Model\KeyAlogrithm.cs" />
+    <Compile Include="Model\MD5Algorithm.cs" />
+    <Compile Include="Model\SHA1Algorithm.cs" />
+    <Compile Include="Model\SHA256Algorithm.cs" />
+    <Compile Include="Model\To64BaseAlgorithm.cs" />
+    <Compile Include="Model\ToBaseAlgorithm.cs" />
+    <Compile Include="Model\ToBinaryBaseAlgorithm.cs" />
+    <Compile Include="Model\ToHexBaseAlogrithm.cs" />
+    <Compile Include="Model\ToOctalBaseAlgorithm.cs" />
+    <Compile Include="Model\XorAlogrithm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\CyberCalculatorForm.resx">

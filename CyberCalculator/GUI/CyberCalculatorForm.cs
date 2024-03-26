@@ -22,7 +22,22 @@ namespace CyberCalculator
         private Font IOFont = new Font("Arial", 12, FontStyle.Bold);
         private const int ROWS = 5;
         private const int COLS = 3;
-        private readonly string[] ButtonsName = CyberCalc.FUNCTION_NAMES_ARRAY;
+        private readonly string[] ButtonsName =
+        {
+            From64BaseAlgorithm.ALGORITHM_NAME,
+            FromHexBaseAlgorithm.ALGORITHM_NAME,
+            FromBinaryBaseAlgorithm.ALGORITHM_NAME,
+            FromOctalBaseAlgorithm.ALGORITHM_NAME,
+            To64BaseAlgorithm.ALGORITHM_NAME,
+            ToHexBaseAlogrithm.ALGORITHM_NAME,
+            ToBinaryBaseAlgorithm.ALGORITHM_NAME,
+            ToOctalBaseAlgorithm.ALGORITHM_NAME,
+            XorAlogrithm.ALGORITHM_NAME,
+            AndAlogrithm.ALGORITHM_NAME,
+            SHA1Algorithm.ALGORITHM_NAME,
+            SHA256Algorithm.ALGORITHM_NAME,
+            MD5Algorithm.ALGORITHM_NAME
+        };
 
         private List<Button> ButtonsList = new List<Button>();
 
@@ -97,23 +112,7 @@ namespace CyberCalculator
 
         private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            OutputTextBox.Text = InputTextBox.Text;
-            if (InputTextBox.Text == "")
-            {
-                OutputTextBox.Text = "";
-                fileInput = null;
-                return;
-            }
-            fileInput = cyberCalculator.encoding437.GetBytes(InputTextBox.Text);
-            string oldRecipe = RecipeTextBox.Text;
-            string output = cyberCalculator.Compute(InputTextBox.Text, RecipeTextBox.Text, fileInput);
-            if (output == null)
-            {
-                RecipeTextBox.Text = oldRecipe;
-                MessageBox.Show("Invalid Input");
-                return;
-            }
-            OutputTextBox.Text = output;
+            // TODO
         }
 
 
@@ -163,6 +162,7 @@ namespace CyberCalculator
         {
             RecipeTextBox.Text = "";
             OutputTextBox.Text = "";
+            cyberCalculator.ResetCyberCalculator();
         }
 
         private void CalculatorForm_Resize(object sender, EventArgs e)
@@ -188,23 +188,30 @@ namespace CyberCalculator
 
         private void Button_Click(object sender, EventArgs e)
         {
+            // TODO
             Button button = (Button)sender;
             string oldRecipe = RecipeTextBox.Text;
             RecipeTextBox.Text += button.Text + Environment.NewLine;
             if (InputTextBox.Text == "")
                 return;
-            if(fileInput == null)
+
+            if (button.Text == From64BaseAlgorithm.ALGORITHM_NAME)
             {
-                fileInput = cyberCalculator.encoding437.GetBytes(InputTextBox.Text);
+                cyberCalculator.AddCryptoFunction(new From64BaseAlgorithm());
             }
-            string output = cyberCalculator.Compute(InputTextBox.Text, RecipeTextBox.Text, fileInput);
-            if(output == null)
+            else if (button.Text == To64BaseAlgorithm.ALGORITHM_NAME)
             {
-                RecipeTextBox.Text = oldRecipe;
-                MessageBox.Show("Invalid Input");
-                return;
+                cyberCalculator.AddCryptoFunction(new To64BaseAlgorithm());
             }
-            OutputTextBox.Text = output;
+            try 
+            {
+                string output = cyberCalculator.Compute(InputTextBox.Text);
+                OutputTextBox.Text = output;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.ToString());
+            }
         }
 
         private void ButtonStyle(Button button)
