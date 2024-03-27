@@ -8,9 +8,13 @@ namespace CyberCalculator.Model
 {
     public class FromHexBaseAlgorithm : FromBaseAlgorithm
     {
-        public static readonly string ALGORITHM_NAME = "FromHex";
+        public const string ALGORITHM_NAME = "FromHex";
         public FromHexBaseAlgorithm() : base(16)
         {
+        }
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }

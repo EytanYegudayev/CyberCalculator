@@ -21,5 +21,10 @@ namespace CyberCalculator.Model
 
         public abstract byte[] ComputeAlogrithm(byte[] bytesInput);
 
+        public override string ToString()
+        {
+            return "Key:" +  BitConverter.ToString(Key).Replace("-", " ");
+        }
+
     }
 }

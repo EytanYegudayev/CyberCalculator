@@ -8,9 +8,14 @@ namespace CyberCalculator.Model
 {
     public class FromOctalBaseAlgorithm : FromBaseAlgorithm
     {
-        public static readonly string ALGORITHM_NAME = "FromOctal";
+        public const string ALGORITHM_NAME = "FromOctal";
         public FromOctalBaseAlgorithm() : base(8)
         {
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }

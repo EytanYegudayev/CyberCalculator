@@ -9,7 +9,7 @@ namespace CyberCalculator.Model
 {
     public class SHA1Algorithm : ICryptoFunction
     {
-        public static readonly string ALGORITHM_NAME = "SHA1";
+        public const string ALGORITHM_NAME = "SHA1";
         public SHA1Algorithm()
         {
         }
@@ -24,6 +24,11 @@ namespace CyberCalculator.Model
         {
             SHA1 sha1 = SHA1.Create();
             return sha1.ComputeHash(bytesInput);
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }

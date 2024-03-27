@@ -8,7 +8,7 @@ namespace CyberCalculator.Model
 {
     public class To64BaseAlgorithm : ToBaseAlgorithm
     {
-        public static readonly string ALGORITHM_NAME = "To64Base";
+        public const string ALGORITHM_NAME = "To64Base";
         public To64BaseAlgorithm() : base(64, -1)
         {
         }
@@ -22,6 +22,11 @@ namespace CyberCalculator.Model
         public override byte[] ComputeAlogrithm(byte[] bytesInput)
         {
             return bytesInput;
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }

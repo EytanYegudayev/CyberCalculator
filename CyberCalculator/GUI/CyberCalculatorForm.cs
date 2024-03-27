@@ -7,7 +7,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using CyberCalculator.GUI;
 using CyberCalculator.Model;
+
 namespace CyberCalculator
 {
     public partial class CyberCalculatorForm : Form
@@ -18,6 +20,7 @@ namespace CyberCalculator
         private TextBox OutputTextBox = new TextBox();
         private TextBox RecipeTextBox = new TextBox();
         private TableLayoutPanel ButtonsPnl = new TableLayoutPanel();
+        private InputKeyForm inputKeyForm = new InputKeyForm();
 
         private Font IOFont = new Font("Arial", 12, FontStyle.Bold);
         private const int ROWS = 5;
@@ -190,20 +193,57 @@ namespace CyberCalculator
         {
             // TODO
             Button button = (Button)sender;
-            string oldRecipe = RecipeTextBox.Text;
-            RecipeTextBox.Text += button.Text + Environment.NewLine;
-            if (InputTextBox.Text == "")
-                return;
+            switch (button.Text)
+            {
+                case From64BaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new From64BaseAlgorithm());
+                    break;
+                case To64BaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new To64BaseAlgorithm());
+                    break;
+                case FromBinaryBaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new FromBinaryBaseAlgorithm());
+                    break;
+                case ToBinaryBaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new ToBinaryBaseAlgorithm());
+                    break;
+                case FromOctalBaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new FromOctalBaseAlgorithm());
+                    break;
+                case ToOctalBaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new ToOctalBaseAlgorithm());
+                    break;
+                case FromHexBaseAlgorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new FromHexBaseAlgorithm());
+                    break;
+                case ToHexBaseAlogrithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new ToHexBaseAlogrithm());
+                    break;
+                case SHA1Algorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new SHA1Algorithm());
+                    break;
+                case SHA256Algorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new SHA256Algorithm());
+                    break;
+                case MD5Algorithm.ALGORITHM_NAME:
+                    cyberCalculator.AddCryptoFunction(new MD5Algorithm());
+                    break;
+                case XorAlogrithm.ALGORITHM_NAME:
+                    inputKeyForm.ShowDialog();
+                    cyberCalculator.AddCryptoFunction(new XorAlogrithm(inputKeyForm.Key));
+                    break;
+                case AndAlogrithm.ALGORITHM_NAME:
+                    inputKeyForm.ShowDialog();
+                    cyberCalculator.AddCryptoFunction(new AndAlogrithm(inputKeyForm.Key));
+                    break;
+            }
+            ComputeInputAndPrintOutput();
+            RecipeTextBox.Text += cyberCalculator.CryptoFunctions.Last() + Environment.NewLine;
+        }
 
-            if (button.Text == From64BaseAlgorithm.ALGORITHM_NAME)
-            {
-                cyberCalculator.AddCryptoFunction(new From64BaseAlgorithm());
-            }
-            else if (button.Text == To64BaseAlgorithm.ALGORITHM_NAME)
-            {
-                cyberCalculator.AddCryptoFunction(new To64BaseAlgorithm());
-            }
-            try 
+        private void ComputeInputAndPrintOutput()
+        {
+            try
             {
                 string output = cyberCalculator.Compute(InputTextBox.Text);
                 OutputTextBox.Text = output;

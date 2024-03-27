@@ -52,6 +52,12 @@
     <Compile Include="GUI\CyberCalculatorForm.Designer.cs">
       <DependentUpon>CyberCalculatorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\InputKeyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\InputKeyForm.Designer.cs">
+      <DependentUpon>InputKeyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\AndAlogrithm.cs" />
     <Compile Include="Model\From64BaseAlgorithm.cs" />
     <Compile Include="Model\FromBaseAlgorithm.cs" />
@@ -75,6 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\CyberCalculatorForm.resx">
       <DependentUpon>CyberCalculatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\InputKeyForm.resx">
+      <DependentUpon>InputKeyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

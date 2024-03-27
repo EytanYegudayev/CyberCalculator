@@ -8,7 +8,7 @@ namespace CyberCalculator.Model
 {
     public class AndAlogrithm : KeyAlogrithm
     {
-        public static readonly string ALGORITHM_NAME = "AND";
+        public const string ALGORITHM_NAME = "AND";
         public AndAlogrithm(string key) : base(key)
         {
         }
@@ -30,6 +30,11 @@ namespace CyberCalculator.Model
             byte[] bytes = Encoding.UTF8.GetBytes(stringInput);
             // Use the function above and convert the bytes to string
             return Encoding.UTF8.GetString(ComputeAlogrithm(bytes));
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME + " " + base.ToString();
         }
 
     }

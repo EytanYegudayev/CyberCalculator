@@ -8,9 +8,14 @@ namespace CyberCalculator.Model
 {
     public class ToBinaryBaseAlgorithm : ToBaseAlgorithm
     {
-        public static readonly string ALGORITHM_NAME = "ToBinary";
+        public const string ALGORITHM_NAME = "ToBinary";
         public ToBinaryBaseAlgorithm() : base(2, 8)
         {
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }

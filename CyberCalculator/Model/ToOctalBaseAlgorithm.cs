@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 namespace CyberCalculator.Model
 {
     public class ToOctalBaseAlgorithm : ToBaseAlgorithm    {
-        public static readonly string ALGORITHM_NAME = "ToOctal";
+        public const string ALGORITHM_NAME = "ToOctal";
         public ToOctalBaseAlgorithm() : base(8, 3)
         {
+        }
+
+        public override string ToString()
+        {
+            return ALGORITHM_NAME;
         }
     }
 }
