@@ -24,14 +24,6 @@ namespace CyberCalculator.Model
             return output;
         }
 
-        public override string ComputeAlogrithm(string stringInput)
-        {
-            // Input string is in UTF 8 representation
-            byte[] bytes = Encoding.UTF8.GetBytes(stringInput);
-            // Use the function above and convert the bytes to string
-            return Encoding.UTF8.GetString(ComputeAlogrithm(bytes));
-        }
-
         public override string ToString()
         {
             return ALGORITHM_NAME + " " + base.ToString();

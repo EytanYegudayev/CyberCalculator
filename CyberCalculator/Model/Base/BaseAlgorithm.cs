@@ -9,15 +9,16 @@ namespace CyberCalculator.Model
     public abstract class BaseAlgorithm : ICryptoFunction
     {
         private readonly int _baseNumber;
-        public BaseAlgorithm(int baseNumber)
+        private readonly int _paddingNumber;
+        public BaseAlgorithm(int baseNumber, int paddingNumber)
         {
             _baseNumber = baseNumber;
+            _paddingNumber = paddingNumber;
         }
 
         public int getBaseNumber() => _baseNumber;
 
-        public abstract string ComputeAlogrithm(string stringInput);
-
+        public int getPaddingNumber() => _paddingNumber;    
         public abstract byte[] ComputeAlogrithm(byte[] bytesInput);
     }
 }

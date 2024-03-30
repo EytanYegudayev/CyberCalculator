@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CyberCalculator.Model
 {
-    public class FromOctalBaseAlgorithm : FromBaseAlgorithm
+    public class FromBinaryBaseAlgorithm : FromBaseAlgorithm
     {
-        public const string ALGORITHM_NAME = "FromOctal";
-        public FromOctalBaseAlgorithm() : base(8)
+        public const string ALGORITHM_NAME = "FromBinary";
+        public FromBinaryBaseAlgorithm() : base(2, 8)
         {
         }
 

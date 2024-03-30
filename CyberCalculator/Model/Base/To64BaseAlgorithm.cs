@@ -13,15 +13,10 @@ namespace CyberCalculator.Model
         {
         }
 
-        public override string ComputeAlogrithm(string stringInput)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(stringInput);
-            return Convert.ToBase64String(bytes);
-        }
-
         public override byte[] ComputeAlogrithm(byte[] bytesInput)
         {
-            return bytesInput;
+            string stringOutput = Convert.ToBase64String(bytesInput);
+            return Encoding.UTF8.GetBytes(stringOutput);
         }
 
         public override string ToString()

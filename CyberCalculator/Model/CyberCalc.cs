@@ -10,20 +10,17 @@ namespace CyberCalculator.Model
     {
         public List<ICryptoFunction> CryptoFunctions = new List<ICryptoFunction>();
 
-        public string Compute(string stringInput)
-        {
-            string stringOutput = stringInput;
-            byte[] byteOutput = Encoding.UTF8.GetBytes(stringInput);
 
-            /// TODO 
-            /// Think what to do if the user enter bytes => unprintable bytes or printable chars.
-            /// Think if the user enter file so i need to check the byte
-            
-            foreach (ICryptoFunction function in CryptoFunctions)
+        public byte[] Compute(byte[] bytesInput) 
+        {
+
+            byte[] bytesOutput =  bytesInput;
+
+            foreach(ICryptoFunction cryptoFunction in CryptoFunctions)
             {
-                stringOutput = function.ComputeAlogrithm(stringOutput);
+                bytesOutput = cryptoFunction.ComputeAlogrithm(bytesOutput);
             }
-            return stringOutput;
+            return bytesOutput;
         }
 
         public void AddCryptoFunction(ICryptoFunction cryptoFunction) {

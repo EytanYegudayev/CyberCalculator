@@ -9,19 +9,15 @@ namespace CyberCalculator.Model
     public class From64BaseAlgorithm : FromBaseAlgorithm
     {
         public const string ALGORITHM_NAME = "From64Base";
-        public From64BaseAlgorithm() : base(64)
+        public From64BaseAlgorithm() : base(64, -1)
         {
         }
 
-        public override string ComputeAlogrithm(string stringInput)
-        { 
-            byte[] bytes = Convert.FromBase64String(stringInput);
-            return Encoding.UTF8.GetString(bytes);
-        }
 
         public override byte[] ComputeAlogrithm(byte[] bytesInput)
         {
-            return bytesInput;
+            byte[] output = Convert.FromBase64String(Encoding.UTF8.GetString(bytesInput));
+            return output;
         }
 
         public override string ToString()

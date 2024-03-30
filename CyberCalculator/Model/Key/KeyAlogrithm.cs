@@ -17,8 +17,6 @@ namespace CyberCalculator.Model
             Key = hexbytes.Select(b => Convert.ToByte(b, 16)).ToArray();
         }
 
-        public abstract string ComputeAlogrithm(string stringInput);
-
         public abstract byte[] ComputeAlogrithm(byte[] bytesInput);
 
         public override string ToString()

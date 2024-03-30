@@ -14,14 +14,14 @@ namespace CyberCalculator
 {
     public partial class CyberCalculatorForm : Form
     {
+        private char DOT_CHAR = '.';
         private CyberCalc cyberCalculator = new CyberCalc();
-        private byte[] fileInput;
         private TextBox InputTextBox = new TextBox();
         private TextBox OutputTextBox = new TextBox();
         private TextBox RecipeTextBox = new TextBox();
         private TableLayoutPanel ButtonsPnl = new TableLayoutPanel();
         private InputKeyForm inputKeyForm = new InputKeyForm();
-
+       
         private Font IOFont = new Font("Arial", 12, FontStyle.Bold);
         private const int ROWS = 5;
         private const int COLS = 3;
@@ -62,9 +62,6 @@ namespace CyberCalculator
             InputTextBox.Multiline = true;
 
             InputTextBox.AllowDrop = true;
-            // Attach event handlers
-            InputTextBox.DragEnter += InputTextBox_DragEnter;
-            InputTextBox.DragDrop += InputTextBox_DragDrop;
             InputTextBox.KeyUp += InputTextBox_KeyUp;
             Controls.Add(InputTextBox);
             
@@ -115,51 +112,17 @@ namespace CyberCalculator
 
         private void InputTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            // TODO
-        }
 
-
-        private void InputTextBox_DragEnter(object sender, DragEventArgs e)
-        {
-            // Check if the data being dragged is a file
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            try
             {
-                e.Effect = DragDropEffects.Copy;
+                ComputeInputAndPrintOutput();
             }
-            else
+            catch (Exception exception)
             {
-                e.Effect = DragDropEffects.None;
+                MessageBox.Show(exception.ToString());
             }
         }
 
-        private void InputTextBox_DragOver(object sender, DragEventArgs e)
-        {
-            // Set the effect based on whether files are being dragged
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
-
-        private void InputTextBox_DragDrop(object sender, DragEventArgs e)
-        {
-            // Retrieve the array of file names being dragged
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-            if(files.Length > 0)
-            {
-                fileInput = File.ReadAllBytes(files[0]);
-                // change all the null bytes 0x00 to another byte to print the file.
-                string printBytes = new string(fileInput.Select(b=> ((int)b) > 0 ? (char)b : '.').ToArray());
-                InputTextBox.Text = printBytes;
-            }
-                
-        }
 
         private void CleanRecipeButton_Click(object sender, EventArgs e)
         {
@@ -191,7 +154,6 @@ namespace CyberCalculator
 
         private void Button_Click(object sender, EventArgs e)
         {
-            // TODO
             Button button = (Button)sender;
             switch (button.Text)
             {
@@ -237,21 +199,35 @@ namespace CyberCalculator
                     cyberCalculator.AddCryptoFunction(new AndAlogrithm(inputKeyForm.Key));
                     break;
             }
-            ComputeInputAndPrintOutput();
-            RecipeTextBox.Text += cyberCalculator.CryptoFunctions.Last() + Environment.NewLine;
+            try
+            {
+                ComputeInputAndPrintOutput();
+                RecipeTextBox.Text += cyberCalculator.CryptoFunctions.Last() + Environment.NewLine;
+            }
+            catch (Exception exception)
+            {
+                cyberCalculator.RemoveLastCryptoFunction();
+                MessageBox.Show(exception.ToString());
+            }
         }
 
         private void ComputeInputAndPrintOutput()
         {
-            try
+            byte[] input = Encoding.UTF8.GetBytes(InputTextBox.Text);
+            byte[] output = cyberCalculator.Compute(input);
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i < output.Length; i++)
             {
-                string output = cyberCalculator.Compute(InputTextBox.Text);
-                OutputTextBox.Text = output;
+                if ((char)output[i] + "" == "" || (char)output[i] == '\0')
+                {
+                    sb.Append(DOT_CHAR);
+                }
+                else
+                {
+                    sb.Append((char)output[i] + "");
+                }
             }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.ToString());
-            }
+            OutputTextBox.Text = sb.ToString();
         }
 
         private void ButtonStyle(Button button)

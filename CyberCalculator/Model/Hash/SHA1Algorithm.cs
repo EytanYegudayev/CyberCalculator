@@ -14,16 +14,12 @@ namespace CyberCalculator.Model
         {
         }
 
-        public string ComputeAlogrithm(string stringInput)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(stringInput);
-            return BitConverter.ToString(ComputeAlogrithm(bytes)).Replace("-", " ");
-        }
 
         public byte[] ComputeAlogrithm(byte[] bytesInput)
         {
             SHA1 sha1 = SHA1.Create();
-            return sha1.ComputeHash(bytesInput);
+            byte[] hashByte = sha1.ComputeHash(bytesInput);
+            return Encoding.UTF8.GetBytes(BitConverter.ToString(hashByte).Replace("-", "").ToLower());
         }
 
         public override string ToString()

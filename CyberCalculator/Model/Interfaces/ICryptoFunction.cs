@@ -8,7 +8,6 @@ namespace CyberCalculator.Model
 {
     public interface ICryptoFunction
     {
-        string ComputeAlogrithm(string stringInput);
         byte[] ComputeAlogrithm(byte[] bytesInput);
     }
 }
